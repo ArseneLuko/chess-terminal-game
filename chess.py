@@ -8,69 +8,63 @@ import subprocess
 import copy
 from constants import STARTING_PIECES, BOARD, WHITE_SQ, BLACK_SQ, LABEL_CHR, LABEL_NUM
 
-def print_chessboard(game_state: dict) -> None:
-    """Print the state of the game.
-    
-    :param game_state (dict): Dictionary with inhabited fields."""
-    subprocess.run('clear') # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
-    squares = []
-    is_white_sq = True
+class Game:
+    def __init__(self) -> None:
+        self.game_state = copy.copy(STARTING_PIECES)
+        self.white_turns = True # white player starts
+        self.check_move_msg = None
+  
+    def run(self):
+        while True:
+            self.print_chessboard()
+            print(self.check_move_msg)
+            print(f'Na tahu je {'bílý (w)' if self.white_turns else 'černý (b)'} hráč')
 
-    for r, lbl_row in enumerate(LABEL_NUM):
-        for c, lbl_col in enumerate(LABEL_CHR):
-            coords = lbl_col + lbl_row
-            # Starts with black filed 'a8' so (0 + 0) % 2 must evaluet True
-            is_white_sq = lambda: BLACK_SQ if (r + c) % 2 == 0 else WHITE_SQ
+            move = input('> ').split()
 
-            if coords in game_state:
-                squares.append(game_state[coords])
-            else:
-                squares.append(is_white_sq())
+            self.check_move_msg = self.check_move(move[0], move[1])
 
-    print(BOARD.format(*squares))
+            if self.check_move_msg:
+                continue
+            
+            self.game_move(move[0], move[1])  
 
+            self.white_turns = not self.white_turns
+      
 
-def game_move(current_pieces: dict[str, str], current_pos: str, new_pos: str) -> dict[str, str]:
-    """Set new position for a piece. 
+    def print_chessboard(self) -> None:
+        """Print the current state of the game."""
+        subprocess.run('clear') # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
+        squares = []
+        is_white_sq = True
 
-    :param current_board (dict): Current game state
-    :param current_pos (str): The position of the piece to be changed
-    :param new_pos (str): New position of the piece"""
+        for r, lbl_row in enumerate(LABEL_NUM):
+            for c, lbl_col in enumerate(LABEL_CHR):
+                coords = lbl_col + lbl_row
+                # Starts with black filed 'a8' so (0 + 0) % 2 must evaluet True
+                is_white_sq = lambda: BLACK_SQ if (r + c) % 2 == 0 else WHITE_SQ
 
-    new_pieces = copy.copy(current_pieces)
+                if coords in self.game_state:
+                    squares.append(self.game_state[coords])
+                else:
+                    squares.append(is_white_sq())
 
-    new_pieces[new_pos] = new_pieces[current_pos]
-    del new_pieces[current_pos]
+        print(BOARD.format(*squares))
 
-    return new_pieces
+    def game_move(self, current_pos: str, new_pos: str) -> None:
+        """Set new position for a piece. 
 
+        :param current_pos (str): The position of the piece to be changed
+        :param new_pos (str): New position of the piece"""
 
-def check_move(current_pieces: dict[str, str], current_pos: str, new_pos: str):
-    if current_pos not in current_pieces:
-        return "Zvolené pole není obsazeno žádnou figurou, vyberte pole s figurou."
-    
-    
-        
+        self.game_state[new_pos] = self.game_state[current_pos]
+        del self.game_state[current_pos]
 
-
-def main_game(game_pieces):
-    white_turns = True # white player starts
-    check_move_msg = None
-
-    while True:
-        print_chessboard(game_pieces)
-        print(check_move_msg)
-        print(f'Na tahu je {'bílý (w)' if white_turns else 'černý (b)'} hráč')
-        move = input('> ').split()
-
-        check_move_msg = check_move(game_pieces, move[0], move[1])
-        if check_move_msg:
-            continue
-
-        game_pieces = game_move(game_pieces, move[0], move[1])
-                       
-        white_turns = not white_turns
+    def check_move(self, current_pos: str, new_pos: str):
+        if current_pos not in self.game_state:
+            return "Zvolené pole není obsazeno žádnou figurou, vyberte pole s figurou."
 
 if __name__ == '__main__':
-    main_game(STARTING_PIECES)
+    game = Game()
+    game.run()
     
