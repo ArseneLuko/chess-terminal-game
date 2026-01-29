@@ -13,11 +13,12 @@ class Game:
         self.game_state = copy.copy(STARTING_PIECES)
         self.white_turns = True # white player starts
         self.check_move_msg = None
+        self.message = lambda: print(self.check_move_msg) if self.check_move_msg else print()
   
     def run(self):
         while True:
             self.print_chessboard()
-            print(self.check_move_msg)
+            self.message()
             print(f'Na tahu je {'bílý (w)' if self.white_turns else 'černý (b)'} hráč')
 
             move = input('> ').split()
