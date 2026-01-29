@@ -30,31 +30,45 @@ def print_chessboard(game_state: dict) -> None:
     print(BOARD.format(*squares))
 
 
-def game_move(current_board: dict[str, str], current_pos: str, new_pos: str) -> dict[str, str]:
+def game_move(current_pieces: dict[str, str], current_pos: str, new_pos: str) -> dict[str, str]:
     """Set new position for a piece. 
 
     :param current_board (dict): Current game state
     :param current_pos (str): The position of the piece to be changed
     :param new_pos (str): New position of the piece"""
 
-    new_board = copy.copy(current_board)
+    new_pieces = copy.copy(current_pieces)
 
-    new_board[new_pos] = new_board[current_pos]
-    del new_board[current_pos]
+    new_pieces[new_pos] = new_pieces[current_pos]
+    del new_pieces[current_pos]
 
-    return new_board
+    return new_pieces
+
+
+def check_move(current_pieces: dict[str, str], current_pos: str, new_pos: str):
+    if current_pos not in current_pieces:
+        return "Zvolené pole není obsazeno žádnou figurou, vyberte pole s figurou."
+    
+    
+        
 
 
 def main_game(game_pieces):
     white_turns = True # white player starts
-    msg = ''
+    check_move_msg = None
 
     while True:
         print_chessboard(game_pieces)
-        print(msg)
+        print(check_move_msg)
         print(f'Na tahu je {'bílý (w)' if white_turns else 'černý (b)'} hráč')
         move = input('> ').split()
+
+        check_move_msg = check_move(game_pieces, move[0], move[1])
+        if check_move_msg:
+            continue
+
         game_pieces = game_move(game_pieces, move[0], move[1])
+                       
         white_turns = not white_turns
 
 if __name__ == '__main__':
