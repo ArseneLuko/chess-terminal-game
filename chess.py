@@ -78,7 +78,7 @@ def print_chessboard(game_state: dict) -> None:
     print(BOARD.format(*squares))
 
 
-def move(current_board: dict[str, str], current_pos: str, new_pos: str) -> dict[str, str]:
+def game_move(current_board: dict[str, str], current_pos: str, new_pos: str) -> dict[str, str]:
     """Set new position for a piece. 
 
     :param current_board (dict): Current game state
@@ -94,10 +94,16 @@ def move(current_board: dict[str, str], current_pos: str, new_pos: str) -> dict[
 
 
 def main_game(game_pieces):
+    white_turns = True # white player starts
+    msg = ''
+
     while True:
         print_chessboard(game_pieces)
-        l = input()
-        game_pieces = move(game_pieces, l[0], l[1])
+        print(msg)
+        print(f'Na tahu je {'bílý (w)' if white_turns else 'černý (b)'} hráč')
+        move = input('> ').split()
+        game_pieces = game_move(game_pieces, move[0], move[1])
+        white_turns = not white_turns
 
 if __name__ == '__main__':
     main_game(STARTING_PIECES)
