@@ -92,12 +92,13 @@ def move(current_board: dict[str, str], current_pos: str, new_pos: str) -> dict[
 
     return new_board
 
-def main_game(game_pieces):
-    print_chessboard(game_pieces)
-    game_pieces = move(game_pieces, 'a7', 'a6')
-    print_chessboard(game_pieces)
-    pass
 
-if __name__ = '__main__:
+def main_game(game_pieces):
+    while True:
+        print_chessboard(game_pieces)
+        l = input()
+        game_pieces = move(game_pieces, l[0], l[1])
+
+if __name__ == '__main__':
     main_game(STARTING_PIECES)
     
