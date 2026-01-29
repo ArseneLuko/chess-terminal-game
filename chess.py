@@ -56,22 +56,21 @@ BLACK_SQ = '||'
 LABEL_CHR = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 LABEL_NUM = ['8', '7', '6', '5', '4', '3', '2', '1']
 
-def print_chessboard(board):
+def print_chessboard(board, game_state):
     subprocess.run('clear') # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
     squares = []
     is_white_sq = True
-    for num_row, lbl_row in enumerate(LABEL_NUM):
-        for num_col, lbl_col in enumerate(LABEL_CHR):
+
+    for r, lbl_row in enumerate(LABEL_NUM):
+        for c, lbl_col in enumerate(LABEL_CHR):
             coords = lbl_col + lbl_row
-            is_white_sq = lambda: BLACK_SQ if (num_row + num_col) % 2 == 0 else WHITE_SQ
-            if coords in STARTING_PIECES:
-                squares.append(STARTING_PIECES[coords])
+            is_white_sq = lambda: BLACK_SQ if (r + c) % 2 == 0 else WHITE_SQ
+            if coords in game_state:
+                squares.append(game_state[coords])
             else:
                 squares.append(is_white_sq())
-            # print(f'coord: {coords} / {is_white_sq()}') # DEBUG
 
-    # print(3 * '\n') # DEBUG
-    print(BOARD_TEMPLATE.format(*squares))
+    print(board.format(*squares))
 
 
-print_chessboard(BOARD_TEMPLATE)
+print_chessboard(BOARD_TEMPLATE, STARTING_PIECES)
