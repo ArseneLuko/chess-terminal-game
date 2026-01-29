@@ -3,7 +3,9 @@ https://automatetheboringstuff.com/3e/chapter7.html#calibre_link-1572
 Slightly modified in my own way.
 """
 
-import sys, copy
+import sys
+import subprocess
+import copy
 
 STARTING_PIECES = {
     'a8': 'bR', 'b8': 'bN', 'c8': 'bB', 'd8': 'bQ',
@@ -55,6 +57,7 @@ LABEL_CHR = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 LABEL_NUM = ['8', '7', '6', '5', '4', '3', '2', '1']
 
 def print_chessboard(board):
+    subprocess.run('clear') # https://docs.python.org/3/library/subprocess.html#using-the-subprocess-module
     squares = []
     is_white_sq = True
     for num_row, lbl_row in enumerate(LABEL_NUM):
@@ -69,5 +72,6 @@ def print_chessboard(board):
 
     # print(3 * '\n') # DEBUG
     print(BOARD_TEMPLATE.format(*squares))
+
 
 print_chessboard(BOARD_TEMPLATE)
