@@ -6,7 +6,7 @@ Slightly modified in my own way.
 import sys
 import subprocess
 import copy
-from constants import STARTING_PIECES, BOARD, WHITE_SQ, BLACK_SQ, LABEL_CHR, LABEL_NUM
+from constants import STARTING_PIECES, BOARD, WHITE_SQ, BLACK_SQ, LABEL_CHR, LABEL_NUM, QUIT
 
 class Game:
     def __init__(self) -> None:
@@ -22,13 +22,16 @@ class Game:
             print(f'Na tahu je {'bílý (w)' if self.white_turns else 'černý (b)'} hráč')
 
             move = input('> ').split()
+            if move[0] in QUIT:
+                print('Díky za hru, na viděnou příště.')
+                sys.exit()
 
             self.check_move_msg = self.check_move(move[0], move[1])
 
             if self.check_move_msg:
                 continue
             
-            self.game_move(move[0], move[1])  
+            self.game_move(move[0],move[1])  
 
             self.white_turns = not self.white_turns
       
@@ -53,7 +56,7 @@ class Game:
         print(BOARD.format(*squares))
 
     def game_move(self, current_pos: str, new_pos: str) -> None:
-        """Set new position for a piece. 
+        """Set new position for a piece in self.game_state. 
 
         :param current_pos (str): The position of the piece to be changed
         :param new_pos (str): New position of the piece"""
